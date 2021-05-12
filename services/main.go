@@ -44,7 +44,6 @@ func UpdateDataInDbByName(name string, data Promocode) (string,Promocode){
 func DeleteDataFromDb(name string) string{
 	db := db.GetDatabase()
 	db.Where("Name = ?", name).Find(&promocode)
-	// need to add feature to stop program from making data blank if nothing is specified.
 	db.Where("Name = ?", name).Delete(&promocode)
 	return "Data deleted"
 }
