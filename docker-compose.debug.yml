@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  promocodeapi:
+    image: promocodeapi
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 4567:4567
