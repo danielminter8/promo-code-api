@@ -1,4 +1,4 @@
-# Basic Promo-Code API
+# Basic Go API
 
 
 ### Small golang project using the gin web framework along with gorm and postgres for the database.
