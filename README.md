@@ -15,6 +15,7 @@
 
 ### Instructions to run program without docker:
 
+- Clone this repo first.
 - Make sure you have golang and postgres installed.
 - Before running app, change the dsn details in **db/connect.go** to your postgres db details. e.g user,password,host and port.
 - In terminal, navigate to project directory and type the following:
