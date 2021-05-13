@@ -1,7 +1,8 @@
-package routers
+package v1
 
 import (
 	"net/http"
+	"promo-code-api/db/promocodes"
 	"promo-code-api/services"
 	"promo-code-api/utils"
 
@@ -17,16 +18,16 @@ type Data struct {
 	Quantity_allocated int64   `json:"quantity_allocated" example:"12" format:"int64"`
 }
 
-// ListAllPromoCodes godoc
+// GetAllPromoCodes gets all the promocodes
 // @Summary Retrieves all promo codes
 // @Produce json
 // @Success 200 {object} Data
 // @Router /all [get]
-func (c *Controller) GetAllPromoCodes(r *gin.Context) {
+func GetAllPromoCodes(r *gin.Context) {
 	data := services.GetAllPromoCodes()
 	r.JSON(http.StatusOK, gin.H{
 		"message": "api routes test",
-		"data":   data,
+		"data":    data,
 		"status":  http.StatusOK,
 	})
 }
@@ -36,7 +37,7 @@ func (c *Controller) GetAllPromoCodes(r *gin.Context) {
 // @Accept multipart/form-data
 // @Produce json
 // @Router /add [post]
-func (c *Controller) AddPromoCode(r *gin.Context) { // get above swagger 👆 to add body data for example request 
+func (c *Controller) AddPromoCode(r *gin.Context) { // get above swagger 👆 to add body data for example request
 	name := r.PostForm("name")
 	date_from := r.PostForm("date_from")
 	date_to := r.PostForm("date_to")
@@ -52,7 +53,7 @@ func (c *Controller) AddPromoCode(r *gin.Context) { // get above swagger 👆 to
 	data.Quantity_allocated = quantity_allocated
 	data.Quantity_available = quantity_available
 	data.Amount = amount
-	message, data := services.AddDataToDb(data)
+	message, data := promocodes.AddDataToDb(data)
 
 	r.JSON(http.StatusOK, gin.H{
 		"message": message,
@@ -68,7 +69,7 @@ func (c *Controller) AddPromoCode(r *gin.Context) { // get above swagger 👆 to
 // @Router /update/{name} [patch]
 func (c *Controller) UpdatePromoCode(r *gin.Context) {
 	name := r.Param("name")
-	date_from := r.PostForm("date_from")
+	dateFrom := r.PostForm("date_from")
 	date_to := r.PostForm("date_to")
 	// below strings are converted to int and float
 	quantity_available := utils.StringToInt(r.PostForm("quantity_available"))
@@ -82,6 +83,15 @@ func (c *Controller) UpdatePromoCode(r *gin.Context) {
 	data.Quantity_allocated = quantity_allocated
 	data.Quantity_available = quantity_available
 	data.Amount = amount
+
+	// var user users.User
+	//err := c.ShouldBindJSON(&user)
+	// if err != nil {
+	// 	r.JSON(http.StatusBadRequest, gin.H{
+	// 		"message": "Invalid parameters",
+	// 	})
+	// }
+
 	message, data := services.UpdateDataInDbByName(name, data)
 
 	r.JSON(http.StatusOK, gin.H{

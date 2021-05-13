@@ -6,8 +6,9 @@ import (
 	"promo-code-api/routers"
 )
 
-
 func main() {
+	// connect and pass connection to routers then use gin router.Use(dbconnection)
+	// error handling
 	db.ConnectToDatabase()
 	routers.Run()
 }

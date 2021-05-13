@@ -18,111 +18,21 @@ var doc = `{
     "info": {
         "description": "{{.Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {
-        "/add": {
-            "post": {
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Retrieves promo code by name"
-            }
-        },
-        "/all": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Retrieves all promo codes",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/routers.Data"
-                        }
-                    }
-                }
-            }
-        },
-        "/delete/{name}": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update promo code by name",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
-                    }
-                ]
-            }
-        },
-        "/update/{name}": {
-            "patch": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update promo code by name",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
-                    }
-                ]
-            }
-        }
-    },
-    "definitions": {
-        "routers.Data": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "number",
-                    "format": "float64",
-                    "example": 5.54
-                },
-                "date_from": {
-                    "type": "string",
-                    "format": "string",
-                    "example": "1/12"
-                },
-                "date_to": {
-                    "type": "string",
-                    "format": "string",
-                    "example": "5/12"
-                },
-                "name": {
-                    "type": "string",
-                    "format": "string",
-                    "example": "barone"
-                },
-                "quantity_allocated": {
-                    "type": "integer",
-                    "format": "int64",
-                    "example": 12
-                },
-                "quantity_available": {
-                    "type": "integer",
-                    "format": "int64",
-                    "example": 5
-                }
-            }
-        }
-    }
+    "paths": {}
 }`
 
 type swaggerInfo struct {
@@ -137,11 +47,11 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
-	Host:        "localhost:5000",
-	BasePath:    "/api/v1",
+	Host:        "petstore.swagger.io",
+	BasePath:    "/v2",
 	Schemes:     []string{},
-	Title:       "Promo Code API",
-	Description: "This is a simple api server using the gin framework.",
+	Title:       "Swagger Example API",
+	Description: "This is a sample server Petstore server.",
 }
 
 type s struct{}

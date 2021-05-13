@@ -1,76 +1,16 @@
-basePath: /api/v1
-definitions:
-  routers.Data:
-    properties:
-      amount:
-        example: 5.54
-        format: float64
-        type: number
-      date_from:
-        example: 1/12
-        format: string
-        type: string
-      date_to:
-        example: 5/12
-        format: string
-        type: string
-      name:
-        example: barone
-        format: string
-        type: string
-      quantity_allocated:
-        example: 12
-        format: int64
-        type: integer
-      quantity_available:
-        example: 5
-        format: int64
-        type: integer
-    type: object
-host: localhost:5000
+basePath: /v2
+host: petstore.swagger.io
 info:
-  contact: {}
-  description: This is a simple api server using the gin framework.
-  title: Promo Code API
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server Petstore server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
   version: "1.0"
-paths:
-  /add:
-    post:
-      consumes:
-      - multipart/form-data
-      produces:
-      - application/json
-      summary: Retrieves promo code by name
-  /all:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/routers.Data'
-      summary: Retrieves all promo codes
-  /delete/{name}:
-    post:
-      parameters:
-      - description: name
-        in: path
-        name: name
-        required: true
-        type: string
-      produces:
-      - application/json
-      summary: Update promo code by name
-  /update/{name}:
-    patch:
-      parameters:
-      - description: name
-        in: path
-        name: name
-        required: true
-        type: string
-      produces:
-      - application/json
-      summary: Update promo code by name
+paths: {}
 swagger: "2.0"

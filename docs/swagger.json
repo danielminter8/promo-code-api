@@ -1,111 +1,21 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a simple api server using the gin framework.",
-        "title": "Promo Code API",
-        "contact": {},
+        "description": "This is a sample server Petstore server.",
+        "title": "Swagger Example API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "1.0"
     },
-    "host": "localhost:5000",
-    "basePath": "/api/v1",
-    "paths": {
-        "/add": {
-            "post": {
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Retrieves promo code by name"
-            }
-        },
-        "/all": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Retrieves all promo codes",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/routers.Data"
-                        }
-                    }
-                }
-            }
-        },
-        "/delete/{name}": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update promo code by name",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
-                    }
-                ]
-            }
-        },
-        "/update/{name}": {
-            "patch": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update promo code by name",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
-                    }
-                ]
-            }
-        }
-    },
-    "definitions": {
-        "routers.Data": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "number",
-                    "format": "float64",
-                    "example": 5.54
-                },
-                "date_from": {
-                    "type": "string",
-                    "format": "string",
-                    "example": "1/12"
-                },
-                "date_to": {
-                    "type": "string",
-                    "format": "string",
-                    "example": "5/12"
-                },
-                "name": {
-                    "type": "string",
-                    "format": "string",
-                    "example": "barone"
-                },
-                "quantity_allocated": {
-                    "type": "integer",
-                    "format": "int64",
-                    "example": 12
-                },
-                "quantity_available": {
-                    "type": "integer",
-                    "format": "int64",
-                    "example": 5
-                }
-            }
-        }
-    }
+    "host": "petstore.swagger.io",
+    "basePath": "/v2",
+    "paths": {}
 }

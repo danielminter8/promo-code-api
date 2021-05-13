@@ -18,3 +18,13 @@ RUN go build -o main .
 ## Our start command which kicks off
 ## our newly created binary executable
 CMD ["/app/main"]
+
+
+
+# FROM golang:1.15
+# RUN mkdir /app
+# ADD . /app
+# WORKDIR /app
+# RUN go mod download
+# RUN go get github.com/githubnemo/CompileDaemon
+# ENTRYPOINT CompileDaemon --build="go build -o main ." --command="/app/main"
