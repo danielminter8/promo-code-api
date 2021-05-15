@@ -1,16 +1,88 @@
-basePath: /v2
-host: petstore.swagger.io
+basePath: /api/v1
+definitions:
+  models.Promocode:
+    properties:
+      amount:
+        example: 5.54
+        format: float64
+        type: number
+      dateFrom:
+        example: 1/12
+        format: string
+        type: string
+      dateTo:
+        example: 5/12
+        format: string
+        type: string
+      name:
+        example: barone
+        format: string
+        type: string
+      quantityAllocated:
+        example: 12
+        format: int64
+        type: integer
+      quantityAvailable:
+        example: 5
+        format: int64
+        type: integer
+    type: object
+host: localhost:5000
 info:
-  contact:
-    email: support@swagger.io
-    name: API Support
-    url: http://www.swagger.io/support
-  description: This is a sample server Petstore server.
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
-  title: Swagger Example API
+  contact: {}
+  description: This is a simple api server using the gin web framework.
+  title: Promo Code API
   version: "1.0"
-paths: {}
+paths:
+  /add:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Example Data
+        in: body
+        name: name,quantityAllocated,quantityAvailable,dateFrom,dateTo,amount
+        required: true
+        schema:
+          $ref: '#/definitions/models.Promocode'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Promocode'
+      summary: Retrieves promo code by name
+  /all:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Promocode'
+      summary: Retrieves all promo codes
+  /delete/{name}:
+    delete:
+      parameters:
+      - description: name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      summary: Update promo code by name
+  /update/{name}:
+    patch:
+      parameters:
+      - description: name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      summary: Update promo code by name
 swagger: "2.0"

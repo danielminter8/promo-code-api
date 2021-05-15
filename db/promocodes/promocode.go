@@ -1,25 +1,17 @@
 package promocodes
 
 import "promo-code-api/db"
+import "promo-code-api/db/models"
 
-// Promocode struct
-type Promocode struct {
-	Name               string
-	DateFrom           string `json:"date_from"`
-	Date_to            string
-	Quantity_available int64
-	Amount             float64
-	Quantity_allocated int64
-}
 
-var promocode Promocode
+var promocode models.Promocode
 
 // controllers
 // first point hit after the route
 
-func GetAllPromoCodes() []Promocode {
+func GetAllPromoCodes() []models.Promocode {
 	db := db.GetDatabase()
-	var records []Promocode
+	var records []models.Promocode
 	db.Find(&records)
 	return records
 }
@@ -34,7 +26,7 @@ func checkIfDataExistsInDb(name string) bool {
 	}
 }
 
-func AddDataToDb(data Promocode) (string, Promocode) {
+func AddDataToDb(data models.Promocode) (string, models.Promocode) {
 	db := db.GetDatabase()
 	if !checkIfDataExistsInDb(data.Name) {
 		db.Create(&data)
@@ -45,7 +37,7 @@ func AddDataToDb(data Promocode) (string, Promocode) {
 
 }
 
-func UpdateDataInDbByName(name string, data Promocode) (string, Promocode) {
+func UpdateDataInDbByName(name string, data models.Promocode) (string, models.Promocode) {
 	db := db.GetDatabase()
 	db.Where("Name = ?", name)
 	// need to add feature to stop program from making data blank if nothing is specified.

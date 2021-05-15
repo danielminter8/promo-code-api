@@ -1,7 +1,7 @@
 package routers
 
 import (
-	promocodes "promo-code-api/controllers/v1"
+	v1 "promo-code-api/controllers/promocodes/v1"
 	_ "promo-code-api/docs"
 
 	"github.com/gin-gonic/gin"
@@ -16,17 +16,14 @@ import (
 // @BasePath /api/v1
 func Run() {
 	r := gin.Default()
-
-	c := NewController()
-
+	
 	v1Grouping := r.Group("/api/v1")
 
 	{
-		v1Grouping.GET("all", promocodes.GetAllPromoCodes)
-		v1.POST("add", c.AddPromoCode)
-		v1.PATCH("update/:name", c.UpdatePromoCode)
-		v1.POST(":id", c.DeletePromoCode)
-
+		v1Grouping.GET("all", v1.GetAllPromoCodes)
+		v1Grouping.POST("add", v1.AddPromoCode)
+		v1Grouping.PATCH("update/:name", v1.UpdatePromoCode)
+		v1Grouping.DELETE("/delete/:name", v1.DeletePromoCode)
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

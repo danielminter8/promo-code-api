@@ -4,7 +4,7 @@ services:
     container_name: promo-code-api
     build: .
     ports: 
-      - 5000:5000 
+      - 8080:5000 
     restart: on-failure
     volumes:
       - api:/usr/src/app/
@@ -12,6 +12,14 @@ services:
       - fullstack-postgres          
     networks:
       - fullstack
+    environment:
+      - GO_ENV=docker
+      - DB_USER=postgres
+      - DB_PASSWORD=pg123
+      - DB_NAME=postgres
+      - DB_HOST=promo_code_db
+      - DB_PORT=5432
+ 
 
 
   fullstack-postgres:
@@ -23,7 +31,7 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - DATABASE_HOST=${DB_HOST} 
     ports:
-      - '5432:5432'
+      - 5432:5432
     volumes:
       - database_postgres:/var/lib/postgresql/data
     networks:

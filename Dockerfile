@@ -15,6 +15,11 @@ WORKDIR /app
 ## we run go build to compile the binary
 ## executable of our Go program
 RUN go build -o main .
+
+RUN go mod download
+RUN go get github.com/githubnemo/CompileDaemon
+ENTRYPOINT CompileDaemon --build="go build -o main ." --command="/app/main"
+
 ## Our start command which kicks off
 ## our newly created binary executable
 CMD ["/app/main"]

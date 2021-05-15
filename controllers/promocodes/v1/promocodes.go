@@ -2,64 +2,53 @@ package v1
 
 import (
 	"net/http"
+	"promo-code-api/db/models"
 	"promo-code-api/db/promocodes"
-	"promo-code-api/services"
-	"promo-code-api/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Data struct {
-	Name               string  `json:"name" example:"barone" format:"string"`
-	Date_from          string  `json:"date_from" example:"1/12" format:"string"`
-	Date_to            string  `json:"date_to" example:"5/12" format:"string"`
-	Quantity_available int64   `json:"quantity_available" example:"5" format:"int64"`
-	Amount             float64 `json:"amount" example:"5.54" format:"float64"`
-	Quantity_allocated int64   `json:"quantity_allocated" example:"12" format:"int64"`
-}
-
 // GetAllPromoCodes gets all the promocodes
 // @Summary Retrieves all promo codes
 // @Produce json
-// @Success 200 {object} Data
+// @Success 200 {object} models.Promocode
 // @Router /all [get]
 func GetAllPromoCodes(r *gin.Context) {
-	data := services.GetAllPromoCodes()
+	data := promocodes.GetAllPromoCodes()
 	r.JSON(http.StatusOK, gin.H{
-		"message": "api routes test",
+		"message": "all promocodes",
 		"data":    data,
 		"status":  http.StatusOK,
 	})
 }
+
+
 
 // AddPromoCode godoc
 // @Summary Retrieves promo code by name
 // @Accept multipart/form-data
 // @Produce json
+// @Param name,quantityAllocated,quantityAvailable,dateFrom,dateTo,amount body models.Promocode true "Example Data"
+// @Success 200 {object} models.Promocode
 // @Router /add [post]
-func (c *Controller) AddPromoCode(r *gin.Context) { // get above swagger 👆 to add body data for example request
-	name := r.PostForm("name")
-	date_from := r.PostForm("date_from")
-	date_to := r.PostForm("date_to")
-	// below strings are converted to int and float
-	quantity_available := utils.StringToInt(r.PostForm("quantity_available"))
-	amount := utils.StringToFloat(r.PostForm("amount"))
-	quantity_allocated := utils.StringToInt(r.PostForm("quantity_allocated"))
+func AddPromoCode(r *gin.Context) { // get above swagger 👆 to add body data for example request
+	
+	var promocode models.Promocode
+	err := r.Bind(&promocode)
+	// fmt.Println(promocode)
+	if err != nil {
+		r.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid parameters",
+		})
+	} else {
+		message, data := promocodes.AddDataToDb(promocode)
+		r.JSON(http.StatusOK, gin.H{
+			"message": message,
+			"data":    data,
+			"status":  http.StatusOK,
+		})
+	}
 
-	var data services.Promocode
-	data.Name = name
-	data.Date_from = date_from
-	data.Date_to = date_to
-	data.Quantity_allocated = quantity_allocated
-	data.Quantity_available = quantity_available
-	data.Amount = amount
-	message, data := promocodes.AddDataToDb(data)
-
-	r.JSON(http.StatusOK, gin.H{
-		"message": message,
-		"data":    data,
-		"status":  http.StatusOK,
-	})
 }
 
 // UpdatePromoCode godoc
@@ -67,53 +56,45 @@ func (c *Controller) AddPromoCode(r *gin.Context) { // get above swagger 👆 to
 // @Produce json
 // @Param name path string true "name"
 // @Router /update/{name} [patch]
-func (c *Controller) UpdatePromoCode(r *gin.Context) {
+func UpdatePromoCode(r *gin.Context) {
+	var promocode models.Promocode
+	err := r.Bind(&promocode)
+
 	name := r.Param("name")
-	dateFrom := r.PostForm("date_from")
-	date_to := r.PostForm("date_to")
-	// below strings are converted to int and float
-	quantity_available := utils.StringToInt(r.PostForm("quantity_available"))
-	amount := utils.StringToFloat(r.PostForm("amount"))
-	quantity_allocated := utils.StringToInt(r.PostForm("quantity_allocated"))
 
-	var data services.Promocode
-	data.Name = name
-	data.Date_from = date_from
-	data.Date_to = date_to
-	data.Quantity_allocated = quantity_allocated
-	data.Quantity_available = quantity_available
-	data.Amount = amount
+	if err != nil {
+		r.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid parameters",
+		})
+	} else {
+		message, data := promocodes.UpdateDataInDbByName(name, promocode)
+		r.JSON(http.StatusOK, gin.H{
+			"message": message,
+			"data":    data,
+			"status":  http.StatusOK,
+		})
+	}
 
-	// var user users.User
-	//err := c.ShouldBindJSON(&user)
-	// if err != nil {
-	// 	r.JSON(http.StatusBadRequest, gin.H{
-	// 		"message": "Invalid parameters",
-	// 	})
-	// }
-
-	message, data := services.UpdateDataInDbByName(name, data)
-
-	r.JSON(http.StatusOK, gin.H{
-		"message": message,
-		"data":    data,
-		"status":  http.StatusOK,
-	})
 }
 
 // DeletePromoCode godoc
 // @Summary Update promo code by name
 // @Produce json
 // @Param name path string true "name"
-// @Router /delete/{name} [post]
-func (c *Controller) DeletePromoCode(r *gin.Context) {
+// @Router /delete/{name} [Delete]
+func DeletePromoCode(r *gin.Context) {
 	name := r.Param("name")
-	message := services.DeleteDataFromDb(name)
-
-	r.JSON(http.StatusOK, gin.H{
-		"message": message,
-		"data":    nil,
-		"status":  http.StatusOK,
-	})
+	if name == "" {
+		r.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid parameters",
+		})
+	} else {
+		message := promocodes.DeleteDataFromDb(name)
+		r.JSON(http.StatusOK, gin.H{
+			"message": message,
+			"data":    nil,
+			"status":  http.StatusOK,
+		})
+	}
 
 }
