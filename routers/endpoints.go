@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"os"
 	v1 "promo-code-api/controllers/promocodes/v1"
 	_ "promo-code-api/docs"
 
@@ -12,11 +13,11 @@ import (
 // @title Promo Code API
 // @version 1.0
 // @description This is a simple api server using the gin web framework.
-// @host localhost:5000
+// @host localhost:8080
 // @BasePath /api/v1
 func Run() {
 	r := gin.Default()
-	
+
 	v1Grouping := r.Group("/api/v1")
 
 	{
@@ -27,7 +28,10 @@ func Run() {
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	r.Run(":5000")
-}
 
-// v2.GET("all", v1.GetAllPromoCodes())
+	port := os.Getenv("GIN_PORT")
+	if port == "" {
+		port = "8080"
+	}
+	r.Run(":" + port)
+}

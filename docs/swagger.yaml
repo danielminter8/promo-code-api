@@ -4,7 +4,7 @@ definitions:
     properties:
       amount:
         example: 5.54
-        format: float64
+        format: string
         type: number
       dateFrom:
         example: 1/12
@@ -20,12 +20,19 @@ definitions:
         type: string
       quantityAllocated:
         example: 12
-        format: int64
+        format: string
         type: integer
       quantityAvailable:
         example: 5
-        format: int64
+        format: string
         type: integer
+    required:
+    - amount
+    - dateFrom
+    - dateTo
+    - name
+    - quantityAllocated
+    - quantityAvailable
     type: object
 host: localhost:5000
 info:
@@ -37,7 +44,7 @@ paths:
   /add:
     post:
       consumes:
-      - multipart/form-data
+      - application/json
       parameters:
       - description: Example Data
         in: body
@@ -52,7 +59,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Promocode'
-      summary: Retrieves promo code by name
+      summary: Add promo code
   /all:
     get:
       produces:
@@ -73,16 +80,29 @@ paths:
         type: string
       produces:
       - application/json
-      summary: Update promo code by name
+      summary: Delete promo code by name
   /update/{name}:
     patch:
+      consumes:
+      - application/json
       parameters:
       - description: name
         in: path
         name: name
         required: true
         type: string
+      - description: Example Data
+        in: body
+        name: quantityAllocated,quantityAvailable,dateFrom,dateTo,amount
+        required: true
+        schema:
+          $ref: '#/definitions/models.Promocode'
       produces:
       - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Promocode'
       summary: Update promo code by name
 swagger: "2.0"

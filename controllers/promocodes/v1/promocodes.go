@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"net/http"
 	"promo-code-api/db/models"
 	"promo-code-api/db/promocodes"
@@ -22,20 +23,17 @@ func GetAllPromoCodes(r *gin.Context) {
 	})
 }
 
-
-
 // AddPromoCode godoc
-// @Summary Retrieves promo code by name
-// @Accept multipart/form-data
+// @Summary Add promo code
+// @Accept application/json
 // @Produce json
 // @Param name,quantityAllocated,quantityAvailable,dateFrom,dateTo,amount body models.Promocode true "Example Data"
 // @Success 200 {object} models.Promocode
 // @Router /add [post]
-func AddPromoCode(r *gin.Context) { // get above swagger 👆 to add body data for example request
-	
+func AddPromoCode(r *gin.Context) {
+
 	var promocode models.Promocode
-	err := r.Bind(&promocode)
-	// fmt.Println(promocode)
+	err := r.ShouldBindJSON(&promocode)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid parameters",
@@ -53,18 +51,21 @@ func AddPromoCode(r *gin.Context) { // get above swagger 👆 to add body data f
 
 // UpdatePromoCode godoc
 // @Summary Update promo code by name
+// @Accept application/json
 // @Produce json
 // @Param name path string true "name"
+// @Param quantityAllocated,quantityAvailable,dateFrom,dateTo,amount body models.Promocode true "Example Data"
+// @Success 200 {object} models.Promocode
 // @Router /update/{name} [patch]
 func UpdatePromoCode(r *gin.Context) {
 	var promocode models.Promocode
-	err := r.Bind(&promocode)
-
 	name := r.Param("name")
-
+	promocode.Name = name
+	err := r.ShouldBindJSON(&promocode)
+	fmt.Println(err)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid parameters",
+			"message": "Missing parameters, make sure you provide dateFrom, dateTo, quanityAllocated, amount, quantityAvailable",
 		})
 	} else {
 		message, data := promocodes.UpdateDataInDbByName(name, promocode)
@@ -78,7 +79,7 @@ func UpdatePromoCode(r *gin.Context) {
 }
 
 // DeletePromoCode godoc
-// @Summary Update promo code by name
+// @Summary Delete promo code by name
 // @Produce json
 // @Param name path string true "name"
 // @Router /delete/{name} [Delete]

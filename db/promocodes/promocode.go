@@ -1,8 +1,9 @@
 package promocodes
 
-import "promo-code-api/db"
-import "promo-code-api/db/models"
-
+import (
+	"promo-code-api/db"
+	"promo-code-api/db/models"
+)
 
 var promocode models.Promocode
 
@@ -40,7 +41,6 @@ func AddDataToDb(data models.Promocode) (string, models.Promocode) {
 func UpdateDataInDbByName(name string, data models.Promocode) (string, models.Promocode) {
 	db := db.GetDatabase()
 	db.Where("Name = ?", name)
-	// need to add feature to stop program from making data blank if nothing is specified.
 	db.Where("Name = ?", name).Save(&data)
 	return "Data updated", data
 }

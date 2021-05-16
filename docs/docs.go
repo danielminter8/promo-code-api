@@ -27,12 +27,12 @@ var doc = `{
         "/add": {
             "post": {
                 "consumes": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Retrieves promo code by name",
+                "summary": "Add promo code",
                 "parameters": [
                     {
                         "description": "Example Data",
@@ -75,7 +75,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Update promo code by name",
+                "summary": "Delete promo code by name",
                 "parameters": [
                     {
                         "type": "string",
@@ -89,6 +89,9 @@ var doc = `{
         },
         "/update/{name}": {
             "patch": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -100,18 +103,43 @@ var doc = `{
                         "name": "name",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Example Data",
+                        "name": "quantityAllocated,quantityAvailable,dateFrom,dateTo,amount",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Promocode"
+                        }
                     }
-                ]
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Promocode"
+                        }
+                    }
+                }
             }
         }
     },
     "definitions": {
         "models.Promocode": {
             "type": "object",
+            "required": [
+                "amount",
+                "dateFrom",
+                "dateTo",
+                "name",
+                "quantityAllocated",
+                "quantityAvailable"
+            ],
             "properties": {
                 "amount": {
                     "type": "number",
-                    "format": "float64",
+                    "format": "string",
                     "example": 5.54
                 },
                 "dateFrom": {
@@ -131,12 +159,12 @@ var doc = `{
                 },
                 "quantityAllocated": {
                     "type": "integer",
-                    "format": "int64",
+                    "format": "string",
                     "example": 12
                 },
                 "quantityAvailable": {
                     "type": "integer",
-                    "format": "int64",
+                    "format": "string",
                     "example": 5
                 }
             }
