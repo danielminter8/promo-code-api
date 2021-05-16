@@ -30,4 +30,4 @@ DB_PORT=5432
 ```
 - In terminal, navigate to project directory and type the following:
 ``` go run .```
-- Navigate to http://localhost:5000/swagger/index.html#/ in your browser where you will see documentation of how to use the api.
+- Navigate to http://localhost:8080/swagger/index.html#/ in your browser where you will see documentation of how to use the api.
