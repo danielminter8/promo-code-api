@@ -3,8 +3,8 @@ package v1
 import (
 	"fmt"
 	"net/http"
-	"promo-code-api/db/models"
 	"promo-code-api/db/promocodes"
+	"promo-code-api/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,15 +12,31 @@ import (
 // GetAllPromoCodes gets all the promocodes
 // @Summary Retrieves all promo codes
 // @Produce json
-// @Success 200 {object} models.Promocode
+// @Success 200 {object} promocodes.Promocode
 // @Router /all [get]
 func GetAllPromoCodes(r *gin.Context) {
 	data := promocodes.GetAllPromoCodes()
 	r.JSON(http.StatusOK, gin.H{
-		"message": "all promocodes",
-		"data":    data,
-		"status":  http.StatusOK,
+		"message":   "all promocodes",
+		"promocode": data,
 	})
+}
+
+// GetAllPromoCodes gets all the promocodes
+// @Summary Retrieves all promo codes
+// @Produce json
+// @Param id path string true "id"
+// @Success 200 {object} promocodes.Promocode
+// @Router /all [get]
+func GetPromoByID(r *gin.Context) {
+	id := r.Param("id")
+	convID := utils.StringToInt(id) //convert string id to int64
+	data := promocodes.GetPromoCodeByID(convID)
+	r.JSON(http.StatusOK, gin.H{
+		"message":   "return promocode by id:" + id,
+		"promocode": data,
+	})
+
 }
 
 // AddPromoCode godoc
@@ -28,11 +44,10 @@ func GetAllPromoCodes(r *gin.Context) {
 // @Accept application/json
 // @Produce json
 // @Param name,quantityAllocated,quantityAvailable,dateFrom,dateTo,amount body models.Promocode true "Example Data"
-// @Success 200 {object} models.Promocode
+// @Success 200 {object} promocodes.Promocode
 // @Router /add [post]
 func AddPromoCode(r *gin.Context) {
-
-	var promocode models.Promocode
+	var promocode promocodes.Promocode
 	err := r.ShouldBindJSON(&promocode)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, gin.H{
@@ -41,26 +56,26 @@ func AddPromoCode(r *gin.Context) {
 	} else {
 		message, data := promocodes.AddDataToDb(promocode)
 		r.JSON(http.StatusOK, gin.H{
-			"message": message,
-			"data":    data,
-			"status":  http.StatusOK,
+			"message":   message,
+			"promocode": data,
 		})
 	}
 
 }
 
 // UpdatePromoCode godoc
-// @Summary Update promo code by name
+// @Summary Update promo code by id
 // @Accept application/json
 // @Produce json
-// @Param name path string true "name"
+// @Param id path string true "id"
 // @Param quantityAllocated,quantityAvailable,dateFrom,dateTo,amount body models.Promocode true "Example Data"
-// @Success 200 {object} models.Promocode
-// @Router /update/{name} [patch]
+// @Success 200 {object} promocodes.Promocode
+// @Router /update/{id} [patch]
 func UpdatePromoCode(r *gin.Context) {
-	var promocode models.Promocode
-	name := r.Param("name")
-	promocode.Name = name
+	var promocode promocodes.Promocode
+	id := r.Param("id")
+	convID := utils.StringToInt(id) //convert string id to int64
+	promocode.ID = convID
 	err := r.ShouldBindJSON(&promocode)
 	fmt.Println(err)
 	if err != nil {
@@ -68,34 +83,55 @@ func UpdatePromoCode(r *gin.Context) {
 			"message": "Missing parameters, make sure you provide dateFrom, dateTo, quanityAllocated, amount, quantityAvailable",
 		})
 	} else {
-		message, data := promocodes.UpdateDataInDbByName(name, promocode)
+		message, data := promocodes.UpdateDataInDbByName(convID, promocode)
 		r.JSON(http.StatusOK, gin.H{
-			"message": message,
-			"data":    data,
-			"status":  http.StatusOK,
+			"message":   message,
+			"promocode": data,
 		})
 	}
 
 }
 
 // DeletePromoCode godoc
-// @Summary Delete promo code by name
+// @Summary Delete promo code by id
 // @Produce json
-// @Param name path string true "name"
-// @Router /delete/{name} [Delete]
+// @Param id path string true "id"
+// @Router /delete/{id} [Delete]
 func DeletePromoCode(r *gin.Context) {
-	name := r.Param("name")
-	if name == "" {
+	id := r.Param("id")
+	convID := utils.StringToInt(id) //convert string id to int64
+	if id == "" {
 		r.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid parameters",
 		})
 	} else {
-		message := promocodes.DeleteDataFromDb(name)
+		message := promocodes.DeleteDataFromDb(convID)
 		r.JSON(http.StatusOK, gin.H{
 			"message": message,
 			"data":    nil,
-			"status":  http.StatusOK,
 		})
 	}
 
+}
+
+// BuyPromoCode godoc
+// @Summary Should minus from quantity available as it was purchased
+// @Produce json
+// @Param name path string true "id"
+// @Router /delete/{id} [Delete]
+func BuyPromoCode(r *gin.Context) {
+	id := r.Param("id")
+
+	if id == "" {
+		r.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid parameters",
+		})
+	} else {
+		convID := utils.StringToInt(id) //convert string id to int64
+		data,message := promocodes.BuyPromoCode(convID)
+		r.JSON(http.StatusOK, gin.H{
+			"message": message,
+			"data":    data,
+		})
+	}
 }

@@ -3,7 +3,9 @@ package routers
 import (
 	"os"
 	v1 "promo-code-api/controllers/promocodes/v1"
+	"promo-code-api/db"
 	_ "promo-code-api/docs"
+	"promo-code-api/utils"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -18,14 +20,21 @@ import (
 func Run() {
 	r := gin.Default()
 
-	v1Grouping := r.Group("/api/v1")
+	mainDB := db.Setup()
+	utils.RunMigration(mainDB)
 
-	{
-		v1Grouping.GET("all", v1.GetAllPromoCodes)
-		v1Grouping.POST("add", v1.AddPromoCode)
-		v1Grouping.PATCH("update/:name", v1.UpdatePromoCode)
-		v1Grouping.DELETE("/delete/:name", v1.DeletePromoCode)
-	}
+	v1Grouping := r.Group("/api/v1")
+	promocodeRoutes := v1Grouping.Group("promo")
+
+	adminRoutes := promocodeRoutes.Group("admin")
+	adminRoutes.GET("", v1.GetAllPromoCodes)
+	adminRoutes.GET("/:id", v1.GetPromoByID)
+	adminRoutes.POST("", v1.AddPromoCode)
+	adminRoutes.PATCH("/:id", v1.UpdatePromoCode)
+	adminRoutes.DELETE("/:id", v1.DeletePromoCode)
+
+	appRoutes := promocodeRoutes.Group("app")
+	appRoutes.POST("/:id", v1.BuyPromoCode)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

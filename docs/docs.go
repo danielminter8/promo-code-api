@@ -183,12 +183,12 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "1.0",
-	Host:        "localhost:5000",
-	BasePath:    "/api/v1",
+	Version:     "",
+	Host:        "",
+	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "Promo Code API",
-	Description: "This is a simple api server using the gin web framework.",
+	Title:       "",
+	Description: "",
 }
 
 type s struct{}

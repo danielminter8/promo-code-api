@@ -1,4 +1,3 @@
-basePath: /api/v1
 definitions:
   models.Promocode:
     properties:
@@ -34,12 +33,8 @@ definitions:
     - quantityAllocated
     - quantityAvailable
     type: object
-host: localhost:5000
 info:
   contact: {}
-  description: This is a simple api server using the gin web framework.
-  title: Promo Code API
-  version: "1.0"
 paths:
   /add:
     post:

@@ -3,8 +3,6 @@ package db
 import (
 	"fmt"
 	"os"
-	"promo-code-api/db/models"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -12,15 +10,15 @@ import (
 
 var db_conn *gorm.DB
 
-func Setup() {
+func Setup() *gorm.DB{
 	dsn := "host=" + os.Getenv("DB_HOST") + " user="+ os.Getenv("DB_USER") + " password="+os.Getenv("DB_PASSWORD") + " dbname="+os.Getenv("DB_NAME") + " port=" + os.Getenv("DB_PORT") + " sslmode=disable TimeZone=Africa/Johannesburg"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)
 	}else{
-		db.AutoMigrate(&models.Promocode{}) // database migration
 		db_conn = db
 	}
+	return db
 }
 
 

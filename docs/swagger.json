@@ -1,13 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a simple api server using the gin web framework.",
-        "title": "Promo Code API",
-        "contact": {},
-        "version": "1.0"
+        "contact": {}
     },
-    "host": "localhost:5000",
-    "basePath": "/api/v1",
     "paths": {
         "/add": {
             "post": {
