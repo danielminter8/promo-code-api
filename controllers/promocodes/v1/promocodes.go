@@ -13,7 +13,7 @@ import (
 // @Summary Retrieves all promo codes
 // @Produce json
 // @Success 200 {object} promocodes.Promocode
-// @Router /all [get]
+// @Router /promo [get]
 func GetAllPromoCodes(r *gin.Context) {
 	data := promocodes.GetAllPromoCodes()
 	r.JSON(http.StatusOK, gin.H{
@@ -27,7 +27,7 @@ func GetAllPromoCodes(r *gin.Context) {
 // @Produce json
 // @Param id path string true "id"
 // @Success 200 {object} promocodes.Promocode
-// @Router /all [get]
+// @Router /promo/admin/{id} [get]
 func GetPromoByID(r *gin.Context) {
 	id := r.Param("id")
 	convID := utils.StringToInt(id) //convert string id to int64
@@ -43,9 +43,9 @@ func GetPromoByID(r *gin.Context) {
 // @Summary Add promo code
 // @Accept application/json
 // @Produce json
-// @Param name,quantityAllocated,quantityAvailable,dateFrom,dateTo,amount body models.Promocode true "Example Data"
+// @Param name,quantityAllocated,quantityAvailable,dateFrom,dateTo,amount body promocodes.Promocode true "Example Data"
 // @Success 200 {object} promocodes.Promocode
-// @Router /add [post]
+// @Router /promo/admin [post]
 func AddPromoCode(r *gin.Context) {
 	var promocode promocodes.Promocode
 	err := r.ShouldBindJSON(&promocode)
@@ -68,9 +68,9 @@ func AddPromoCode(r *gin.Context) {
 // @Accept application/json
 // @Produce json
 // @Param id path string true "id"
-// @Param quantityAllocated,quantityAvailable,dateFrom,dateTo,amount body models.Promocode true "Example Data"
+// @Param quantityAllocated,quantityAvailable,dateFrom,dateTo,amount body promocodes.Promocode true "Example Data"
 // @Success 200 {object} promocodes.Promocode
-// @Router /update/{id} [patch]
+// @Router /promo/admin/{id} [patch]
 func UpdatePromoCode(r *gin.Context) {
 	var promocode promocodes.Promocode
 	id := r.Param("id")
@@ -96,7 +96,7 @@ func UpdatePromoCode(r *gin.Context) {
 // @Summary Delete promo code by id
 // @Produce json
 // @Param id path string true "id"
-// @Router /delete/{id} [Delete]
+// @Router /promo/admin/{id} [delete]
 func DeletePromoCode(r *gin.Context) {
 	id := r.Param("id")
 	convID := utils.StringToInt(id) //convert string id to int64
@@ -118,7 +118,7 @@ func DeletePromoCode(r *gin.Context) {
 // @Summary Should minus from quantity available as it was purchased
 // @Produce json
 // @Param name path string true "id"
-// @Router /delete/{id} [Delete]
+// @Router /promo/app/{id} [post]
 func BuyPromoCode(r *gin.Context) {
 	id := r.Param("id")
 
@@ -128,7 +128,7 @@ func BuyPromoCode(r *gin.Context) {
 		})
 	} else {
 		convID := utils.StringToInt(id) //convert string id to int64
-		data,message := promocodes.BuyPromoCode(convID)
+		data, message := promocodes.BuyPromoCode(convID)
 		r.JSON(http.StatusOK, gin.H{
 			"message": message,
 			"data":    data,

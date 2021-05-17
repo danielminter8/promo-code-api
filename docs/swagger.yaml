@@ -1,5 +1,6 @@
+basePath: /api/v1
 definitions:
-  models.Promocode:
+  promocodes.Promocode:
     properties:
       amount:
         example: 5.54
@@ -13,6 +14,8 @@ definitions:
         example: 5/12
         format: string
         type: string
+      id:
+        type: integer
       name:
         example: barone
         format: string
@@ -33,10 +36,24 @@ definitions:
     - quantityAllocated
     - quantityAvailable
     type: object
+host: localhost:8080
 info:
   contact: {}
+  description: This is a simple api server using the gin web framework.
+  title: Promo Code API
+  version: "1.0"
 paths:
-  /add:
+  /promo:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/promocodes.Promocode'
+      summary: Retrieves all promo codes
+  /promo/admin:
     post:
       consumes:
       - application/json
@@ -46,44 +63,48 @@ paths:
         name: name,quantityAllocated,quantityAvailable,dateFrom,dateTo,amount
         required: true
         schema:
-          $ref: '#/definitions/models.Promocode'
+          $ref: '#/definitions/promocodes.Promocode'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Promocode'
+            $ref: '#/definitions/promocodes.Promocode'
       summary: Add promo code
-  /all:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Promocode'
-      summary: Retrieves all promo codes
-  /delete/{name}:
+  /promo/admin/{id}:
     delete:
       parameters:
-      - description: name
+      - description: id
         in: path
-        name: name
+        name: id
         required: true
         type: string
       produces:
       - application/json
-      summary: Delete promo code by name
-  /update/{name}:
+      summary: Delete promo code by id
+    get:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/promocodes.Promocode'
+      summary: Retrieves all promo codes
     patch:
       consumes:
       - application/json
       parameters:
-      - description: name
+      - description: id
         in: path
-        name: name
+        name: id
         required: true
         type: string
       - description: Example Data
@@ -91,13 +112,24 @@ paths:
         name: quantityAllocated,quantityAvailable,dateFrom,dateTo,amount
         required: true
         schema:
-          $ref: '#/definitions/models.Promocode'
+          $ref: '#/definitions/promocodes.Promocode'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Promocode'
-      summary: Update promo code by name
+            $ref: '#/definitions/promocodes.Promocode'
+      summary: Update promo code by id
+  /promo/app/{id}:
+    post:
+      parameters:
+      - description: id
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      summary: Should minus from quantity available as it was purchased
 swagger: "2.0"

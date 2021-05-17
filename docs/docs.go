@@ -24,7 +24,23 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/add": {
+        "/promo": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieves all promo codes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/promocodes.Promocode"
+                        }
+                    }
+                }
+            }
+        },
+        "/promo/admin": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -40,7 +56,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Promocode"
+                            "$ref": "#/definitions/promocodes.Promocode"
                         }
                     }
                 ],
@@ -48,46 +64,51 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Promocode"
+                            "$ref": "#/definitions/promocodes.Promocode"
                         }
                     }
                 }
             }
         },
-        "/all": {
+        "/promo/admin/{id}": {
             "get": {
                 "produces": [
                     "application/json"
                 ],
                 "summary": "Retrieves all promo codes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Promocode"
+                            "$ref": "#/definitions/promocodes.Promocode"
                         }
                     }
                 }
-            }
-        },
-        "/delete/{name}": {
+            },
             "delete": {
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete promo code by name",
+                "summary": "Delete promo code by id",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name",
-                        "name": "name",
+                        "description": "id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
                 ]
-            }
-        },
-        "/update/{name}": {
+            },
             "patch": {
                 "consumes": [
                     "application/json"
@@ -95,12 +116,12 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Update promo code by name",
+                "summary": "Update promo code by id",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name",
-                        "name": "name",
+                        "description": "id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     },
@@ -110,7 +131,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Promocode"
+                            "$ref": "#/definitions/promocodes.Promocode"
                         }
                     }
                 ],
@@ -118,15 +139,32 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Promocode"
+                            "$ref": "#/definitions/promocodes.Promocode"
                         }
                     }
                 }
             }
+        },
+        "/promo/app/{id}": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Should minus from quantity available as it was purchased",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ]
+            }
         }
     },
     "definitions": {
-        "models.Promocode": {
+        "promocodes.Promocode": {
             "type": "object",
             "required": [
                 "amount",
@@ -151,6 +189,9 @@ var doc = `{
                     "type": "string",
                     "format": "string",
                     "example": "5/12"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string",
@@ -183,12 +224,12 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "",
-	Host:        "",
-	BasePath:    "",
+	Version:     "1.0",
+	Host:        "localhost:8080",
+	BasePath:    "/api/v1",
 	Schemes:     []string{},
-	Title:       "",
-	Description: "",
+	Title:       "Promo Code API",
+	Description: "This is a simple api server using the gin web framework.",
 }
 
 type s struct{}
